@@ -13,28 +13,18 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  login:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # - uses: actions/checkout@v3
-
-      # Runs a single command using the runners shell
       -
         name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_IMAGEVERSE }}
-
-      # Runs a set of commands using the runners shell
-      - name: Docker pull and push
+      - 
+        name: Docker pull and push
         run: |
           docker pull ghcr.io/cross-rs/aarch64-linux-android:main  
           docker tag  ghcr.io/cross-rs/aarch64-linux-android:main  small/cross-rs/aarch64-linux-android:main       
@@ -42,5 +32,35 @@ jobs:
           docker pull ghcr.io/cross-rs/arm-linux-androideabi:main
           docker tag ghcr.io/cross-rs/arm-linux-androideabi:main small/cross-rs/arm-linux-androideabi:main
           docker push small/cross-rs/arm-linux-androideabi:main
+          
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# jobs:
+#   # This workflow contains a single job called "build"
+#   build:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-latest
+
+#     # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       # - uses: actions/checkout@v3
+
+#       # Runs a single command using the runners shell
+#       -
+#         name: Login to Docker Hub
+#         uses: docker/login-action@v2
+#         with:
+#           username: ${{ secrets.DOCKERHUB_USERNAME }}
+#           password: ${{ secrets.DOCKERHUB_IMAGEVERSE }}
+
+#       # Runs a set of commands using the runners shell
+#       - name: Docker pull and push
+#         run: |
+#           docker pull ghcr.io/cross-rs/aarch64-linux-android:main  
+#           docker tag  ghcr.io/cross-rs/aarch64-linux-android:main  small/cross-rs/aarch64-linux-android:main       
+#           docker push small/cross-rs/aarch64-linux-android:main
+#           docker pull ghcr.io/cross-rs/arm-linux-androideabi:main
+#           docker tag ghcr.io/cross-rs/arm-linux-androideabi:main small/cross-rs/arm-linux-androideabi:main
+#           docker push small/cross-rs/arm-linux-androideabi:main
           
           

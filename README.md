@@ -1,5 +1,5 @@
 # imageverse:(Speed up the download of container images via DockerHub)
- **Copy the container image resource from ["gcr.io","k8s.gcr.io","ghcr.io"] to dockerhub**
+ **Copy the container image resource from "gcr.io"/"k8s.gcr.io"/"ghcr.io" to [dockerhub](https://hub.docker.com/u/smallverse)**
 ## TODO:action by temp
 ---
 

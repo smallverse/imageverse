@@ -29,9 +29,11 @@ jobs:
           docker pull ghcr.io/cross-rs/aarch64-linux-android:main  
           docker tag  ghcr.io/cross-rs/aarch64-linux-android:main  smallverse/aarch64-linux-android:main       
           docker push smallverse/aarch64-linux-android:main
+          echo "------ push image end"
           docker pull ghcr.io/cross-rs/arm-linux-androideabi:main
           docker tag ghcr.io/cross-rs/arm-linux-androideabi:main smallverse/arm-linux-androideabi:main
           docker push smallverse/arm-linux-androideabi:main
+          echo "------ push image end"
           
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 # jobs:

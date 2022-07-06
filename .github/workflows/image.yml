@@ -1,8 +1,9 @@
 name: Issue Reply
 
-on:
+on: 
   issues:
-    types: [labeled]
+    types: [opened,labeled]
+  workflow_dispatch:
 
 jobs:
   reply-helper:

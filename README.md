@@ -1,9 +1,15 @@
-# imageverse:(Speed up the download of container images via DockerHub)
- **Copy the container image resource from "gcr.io"/"k8s.gcr.io"/"ghcr.io" to [dockerhub](https://hub.docker.com/u/smallverse)**
-## TODO:action by temp
+# 1 imageverse:
+> Speed up the download of container images via DockerHub
+## 1.1 The principle of:
+> pull image from "gcr.io"/"k8s.gcr.io"/"ghcr.io",and tag it, then push the container image resource to [dockerhub](https://hub.docker.com/u/smallverse)
+
+## 1.2 action by temp use issues
+```
+# TODO:
+```
 ---
 
-## Refer to the link:
+# 2 Refer to the link:
 
 https://developer.aliyun.com/article/875641
 

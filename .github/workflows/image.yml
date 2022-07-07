@@ -9,8 +9,15 @@ jobs:
   reply-helper:
     runs-on: ubuntu-latest
     steps:
+      - name: check-issue
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'check-issue'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          title-includes: 'gcr.io,k8s.gcr.io,ghcr.io'
       - name: image
-        if: github.event.label.name == 'image'
+        if: github.event.label.name == 'image' & steps.check-issue.outputs.check-result == 'true'
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'create-comment'
@@ -20,4 +27,4 @@ jobs:
             Hello @${{ github.event.issue.user.login }}. We totally like your proposal/feedback, welcome PR。
 
             你好 @${{ github.event.issue.user.login }}，我们完全同意你的提议/反馈，欢迎PR。
-          title-includes: 'gcr.io,k8s.gcr.io,ghcr.io'
+          

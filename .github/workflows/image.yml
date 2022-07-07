@@ -2,7 +2,8 @@ name: Issue Reply
 
 on: 
   issues:
-    types: [labeled,created,opened,edited]
+#     types: [labeled,created,opened,edited]
+    types: [labeled,opened,edited]
   workflow_dispatch:
 
 jobs:
@@ -14,7 +15,7 @@ jobs:
         if: github.event.label.name == 'image' 
         uses: actions-cool/issues-helper@v3
         with:
-          actions: 'check-issue for label image'
+          actions: 'check-issue'
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ github.event.issue.number }}
           title-includes: 'gcr.io,k8s.gcr.io,ghcr.io'

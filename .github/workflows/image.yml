@@ -11,14 +11,15 @@ jobs:
     steps:
       - name: check-issue
         id: check_issue_id
+        if: github.event.label.name == 'image' 
         uses: actions-cool/issues-helper@v3
         with:
-          actions: 'check-issue'
+          actions: 'check-issue for label image'
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ github.event.issue.number }}
           title-includes: 'gcr.io,k8s.gcr.io,ghcr.io'
       - name: image
-        if: github.event.label.name == 'image' 
+        if: steps.check_issue_id.outputs.check-result == 'true'
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'create-comment'

@@ -20,3 +20,4 @@ jobs:
             Hello @${{ github.event.issue.user.login }}. We totally like your proposal/feedback, welcome PR。
 
             你好 @${{ github.event.issue.user.login }}，我们完全同意你的提议/反馈，欢迎PR。
+          title-includes: 'gcr.io,k8s.gcr.io,ghcr.io'

@@ -19,7 +19,6 @@ jobs:
           title-includes: 'gcr.io,k8s.gcr.io,ghcr.io'
       - name: image
         if: steps.check_issue_id.outputs.check-result == 'true' && github.event.label.name == 'image' 
-         
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'create-comment'

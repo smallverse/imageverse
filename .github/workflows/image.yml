@@ -2,7 +2,7 @@ name: Issue Reply
 
 on: 
   issues:
-    types: [opened]
+    types: [created,opened,edited]
   workflow_dispatch:
 
 jobs:

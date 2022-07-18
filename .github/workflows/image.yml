@@ -99,7 +99,7 @@ jobs:
                 } else {
 
                     if (image_name.length > idx + 1) {
-                        rep_name = image_name.substring(0, idx + 1) + image_name.substring(idx + 1).replaceAll('/', '_');
+                        rep_name = image_name.substring(0, idx + 1) + image_name.substring(idx + 1).replace(/\//g,'_');
                     }
                     issues_body = '构建进展 [https://github.com/${{ env.GH_USER }}/${{ env.REPO_NAME }}/actions/runs/${{ github.run_id }}](https://github.com/${{ env.GH_USER }}/${{ env.REPO_NAME }}/actions/runs/${{ github.run_id }})'
                 }

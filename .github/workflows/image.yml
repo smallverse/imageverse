@@ -166,7 +166,7 @@ jobs:
               console.log("is success?", success)
               let labels = []
               if(success){
-                body = "转换完成 <br/>\n```bash \n#原镜像\n${{ steps.get_image_issues.outputs.IMAGE_NAME }}\n\n\n#转换后镜像\n${{ steps.get_image_issues.outputs.REP_NAME }}\n\n\n#下载并重命名镜像\ndocker pull ${{ steps.get_image_issues.outputs.REP_NAME }}\ndocker tag ${{ steps.get_image_issues.outputs.REP_NAME }} ${{ steps.get_image_issues.outputs.IMAGE_NAME }}\ndocker images | grep $(echo ${{ steps.get_image_issues.outputs.IMAGE_NAME }}|awk -F':' '{print $1}')\n\n\n# 也可以用我写的脚本\nwget https://raw.githubusercontent.com/anjia0532/gcr.io_mirror/master/pull-k8s-image.sh && chmod +x pull-k8s-image.sh\n./pull-k8s-image.sh ${{ steps.get_image_issues.outputs.IMAGE_NAME }}\n```"
+                body = "转换完成 <br/>\n```bash \n#原镜像\n${{ steps.get_image_issues.outputs.IMAGE_NAME }}\n\n\n#转换后镜像\n${{ steps.get_image_issues.outputs.REP_NAME }}\n\n\n#下载并重命名镜像\ndocker pull ${{ steps.get_image_issues.outputs.REP_NAME }}\ndocker tag ${{ steps.get_image_issues.outputs.REP_NAME }} ${{ steps.get_image_issues.outputs.IMAGE_NAME }}\ndocker images | grep $(echo ${{ steps.get_image_issues.outputs.IMAGE_NAME }}|awk -F':' '{print $1}')\n\n\n```"
                 labels=['success']
               }else{
                 const jobsResponse =  await github.actions.listJobsForWorkflowRun({

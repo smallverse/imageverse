@@ -76,14 +76,17 @@ jobs:
                 image_name = title.trim()
                 issues_body = ''
                 is_error = false
+                error_message = ''
                 if (image_name.includes("@")) {
                     // 不支持带摘要 k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.1.1@sha256:64d8c73dca984af206adf9d6d7e46aa550362b1d7a01f3a0a91b20cc67868660
                     is_error = true
                     issues_body = '@' + issues_author + ' 拉取镜像不支持带摘要信息，请去除 @部分'
+                    error_message = issues_body;
                 } else if (!image_name.includes("gcr.io,k8s.gcr.io,ghcr.io")) {
                     // 只支持 gcr.io,k8s.gcr.io,ghcr.io
                     is_error = true
                     issues_body = '@' + issues_author + ' 目前只支持 gcr.io,k8s.gcr.io,ghcr.io'
+                    error_message = issues_body;
                 } else {
                     issues_body = '构建进展 [https://github.com/${{ env.GH_USER }}/${{ env.REPO_NAME }}/actions/runs/${{ github.run_id }}](https://github.com/${{ env.GH_USER }}/${{ env.REPO_NAME }}/actions/runs/${{ github.run_id }})'
                 }
@@ -96,7 +99,7 @@ jobs:
                 console.log("create issues comment resp:", issuesComment["status"]);
                 console.log("gcr_image from issues is ", image_name, ", issue_number is ", issue_number, ",issues_author is ", issues_author)
                 if (is_error) {
-                    core.setFailed("Error");
+                    core.setFailed("Error:" + error_message);
                 }
             } else {
                 core.setFailed("No Images");

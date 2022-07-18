@@ -3,7 +3,7 @@
 ## 1.1 The principle of:
 > pull image from "gcr.io"/"k8s.gcr.io"/"ghcr.io",and tag it, then push the container image resource to [dockerhub](https://hub.docker.com/u/smallverse)
 
-## 1.2 action by temp use issues
+## 1.2 [action by temp use issues](https://github.com/smallverse/imageverse/issues/new/choose)
 ![image](https://user-images.githubusercontent.com/11326721/179495683-478bfd1e-c855-46bb-9784-96f2e7871e9d.png)
 
 

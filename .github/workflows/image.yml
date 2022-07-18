@@ -14,6 +14,9 @@ env:
 jobs:
   reply-helper:
     runs-on: ubuntu-latest
+    outputs:
+      GCR_IMAGE: ${{ steps.pullIssuesPorter.outputs.IMAGE_NAME }}
+      SUCCESS: ${{ steps.successCheck.outputs.SUCCESS }}
     steps:
       - name: check-issue
         id: check_issue_id

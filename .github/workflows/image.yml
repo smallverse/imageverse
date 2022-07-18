@@ -132,8 +132,16 @@ jobs:
         run: |
           docker pull ${{ steps.get_image_issues.outputs.IMAGE_NAME }}  
           docker tag  ${{ steps.get_image_issues.outputs.IMAGE_NAME }}  ${{ steps.get_image_issues.outputs.REP_NAME }}      
-          docker ${{ steps.get_image_issues.outputs.REP_NAME }} 
+          docker push ${{ steps.get_image_issues.outputs.REP_NAME }} 
           echo "------ push image end"
+      - name: success check
+        id: successCheck
+        uses: actions/github-script@v3.1.0
+        if: ${{ success() }}
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            core.setOutput('SUCCESS', true)
       - name: image
         if: steps.check_issue_id.outputs.check-result == 'true'
         uses: actions-cool/issues-helper@v3

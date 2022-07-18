@@ -82,7 +82,7 @@ jobs:
                 is_error = false
                 error_message = ''
                 if (image_name.includes("@")) {
-                    // 不支持带摘要 k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.1.1@sha256:64d8c73dca984af206adf9d6d7e46aa550362b1d7a01f3a0a91b20cc67868660
+                    // 不支持带摘要 k8s.gcr.io/xxx/xxx:v1.1.1@sha256:64dxxx
                     is_error = true
                     issues_body = '@' + issues_author + ' 拉取镜像不支持带摘要信息，请去除 @部分'
                     error_message = issues_body;

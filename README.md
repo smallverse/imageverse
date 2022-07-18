@@ -4,9 +4,9 @@
 > pull image from "gcr.io"/"k8s.gcr.io"/"ghcr.io",and tag it, then push the container image resource to [dockerhub](https://hub.docker.com/u/smallverse)
 
 ## 1.2 action by temp use issues
-```
-# TODO:
-```
+![image](https://user-images.githubusercontent.com/11326721/179495683-478bfd1e-c855-46bb-9784-96f2e7871e9d.png)
+
+
 ---
 
 # 2 Refer to the link:

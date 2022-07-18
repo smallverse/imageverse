@@ -181,8 +181,7 @@ jobs:
                 }
                 labels=['failed']
               }
-              let gcrImg = "${{ steps.pullIssuesPorter.outputs.IMAGE_NAME }}"
-
+              let gcrImg = "${{ steps.get_image_issues.outputs.IMAGE_NAME }}"
               let colonIndex = gcrImg.indexOf(":")
               if (colonIndex > 0) {
                 gcrImg = gcrImg.substr(0,colonIndex)
@@ -194,7 +193,6 @@ jobs:
                 body+="\n\n\n k8s.gcr.io 镜像标签 Api(需梯子) <https://k8s.gcr.io/v2/"+names.join("/")+"/tags/list>\n\n k8s.gcr.io 镜像标签 UI(需梯子) <https://console.cloud.google.com/gcr/images/k8s-artifacts-prod/us/"+names.join("/")+">\n\n"
               }else{
                 let uri=names[0]+"/global/"+names.slice(1,5).join("/")
-
                 if(names.length==1){
                   uri="global/"+names[0]
                 }
@@ -203,7 +201,7 @@ jobs:
               const issuesComment = await github.issues.createComment({
                   owner: '${{ env.GH_USER }}',
                   repo: '${{ env.REPO_NAME }}',
-                  issue_number: ${{ steps.pullIssuesPorter.outputs.ISSUE_NUMBER }},
+                  issue_number: ${{ steps.get_image_issues.outputs.ISSUE_NUMBER }},
                   body: body
               });
               console.log("create issues comment resp:", issuesComment["status"] == 201 ? "success" : "failed" )
@@ -211,7 +209,7 @@ jobs:
                 await github.issues.addLabels({
                   owner: '${{ env.GH_USER }}',
                   repo: '${{ env.REPO_NAME }}',
-                  issue_number: ${{ steps.pullIssuesPorter.outputs.ISSUE_NUMBER }},
+                  issue_number: ${{ steps.get_image_issues.outputs.ISSUE_NUMBER }},
                   labels: labels
               });
               }

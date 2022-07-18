@@ -86,7 +86,7 @@ jobs:
                     is_error = true
                     issues_body = '@' + issues_author + ' 拉取镜像不支持带摘要信息，请去除 @部分'
                     error_message = issues_body;
-                } else if (!condition.find(item => image_name.includes(item))) {
+                } else if (!conditions.find(item => image_name.includes(item))) {
                     // 只支持 gcr.io,k8s.gcr.io,ghcr.io
                     is_error = true
                     issues_body = '@' + issues_author + ' 目前只支持 gcr.io,k8s.gcr.io,ghcr.io'

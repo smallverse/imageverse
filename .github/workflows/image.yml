@@ -17,6 +17,7 @@ jobs:
     outputs:
       IMAGE_NAME: ${{ steps.pullIssuesPorter.outputs.IMAGE_NAME }}
       SUCCESS: ${{ steps.successCheck.outputs.SUCCESS }}
+      REP_NAME: ${{ steps.pullIssuesPorter.outputs.REP_NAME }}
     steps:
       - name: check-issue
         id: check_issue_id

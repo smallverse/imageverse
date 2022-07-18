@@ -38,6 +38,7 @@ jobs:
             let image_name
             let title
             let issues_author
+            let rep_name
 
             const ev = JSON.parse(
                 fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8')
@@ -74,7 +75,7 @@ jobs:
 
             //
             const conditions = ["gcr.io", "k8s.gcr.io", "ghcr.io"];
-
+            let idx = image_name.indexOf('/');
             if (issue_number > 0) {
                 image_name = title.trim()
                 issues_body = ''
@@ -90,7 +91,15 @@ jobs:
                     is_error = true
                     issues_body = '@' + issues_author + ' 目前只支持 gcr.io,k8s.gcr.io,ghcr.io'
                     error_message = issues_body;
+                } else if (image_name.length == idx + 1) {
+                    is_error = true
+                    issues_body = '@' + issues_author + ' issues title is err:' + image_name
+                    error_message = issues_body;
                 } else {
+
+                    if (image_name.length > idx + 1) {
+                        rep_name = image_name.substring(0, idx + 1) + image_name.substring(idx + 1).replaceAll('/', '_');
+                    }
                     issues_body = '构建进展 [https://github.com/${{ env.GH_USER }}/${{ env.REPO_NAME }}/actions/runs/${{ github.run_id }}](https://github.com/${{ env.GH_USER }}/${{ env.REPO_NAME }}/actions/runs/${{ github.run_id }})'
                 }
                 const issuesComment = await github.issues.createComment({
@@ -107,10 +116,6 @@ jobs:
             } else {
                 core.setFailed("No Images");
             }
-
-            let rep_name=''
-            let idx = image_name.indexOf('/');
-            rep_name = image_name.substring(0, idx) + image_name.substring(idx).replace('/', '_');
 
             core.setOutput('IMAGE_NAME', image_name)
             core.setOutput('ISSUE_NUMBER', issue_number)

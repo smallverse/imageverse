@@ -147,15 +147,73 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             core.setOutput('SUCCESS', true)
-      - name: image
-        if: steps.check_issue_id.outputs.check-result == 'true'
-        uses: actions-cool/issues-helper@v3
+      - name: Close image Issues
+        uses: actions/github-script@v3.1.0
+        if: ${{ always() }}
         with:
-          actions: 'create-comment'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            Hello @${{ github.event.issue.user.login }}. We totally like your proposal/feedback, welcome PR。
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            if (${{ steps.get_image_issues.outputs.ISSUE_NUMBER }} > 0){
+              const issuesResponse =  await github.issues.update({
+                owner: '${{ env.GH_USER }}',
+                repo: '${{ env.REPO_NAME }}',
+                issue_number: ${{ steps.get_image_issues.outputs.ISSUE_NUMBER }},
+                state: 'closed'
+              })
+              console.log("update issues resp:", issuesResponse["status"] == 200 ? "success" : "failed" )
+              let body = "转换失败,详见 [构建任务](https://github.com/${{ env.GH_USER }}/${{ env.REPO_NAME }}/actions/runs/${{ github.run_id }})"
+              let success = String(${{ steps.successCheck.outputs.SUCCESS }}).toLowerCase() == "true"
+              console.log("is success?", success)
+              let labels = []
+              if(success){
+                body = "转换完成 <br/>\n```bash \n#原镜像\n${{ steps.get_image_issues.outputs.IMAGE_NAME }}\n\n\n#转换后镜像\n${{ steps.get_image_issues.outputs.REP_NAME }}\n\n\n#下载并重命名镜像\ndocker pull ${{ steps.get_image_issues.outputs.REP_NAME }}\ndocker tag ${{ steps.get_image_issues.outputs.REP_NAME }} ${{ steps.get_image_issues.outputs.IMAGE_NAME }}\ndocker images | grep $(echo ${{ steps.get_image_issues.outputs.IMAGE_NAME }}|awk -F':' '{print $1}')\n\n\n# 也可以用我写的脚本\nwget https://raw.githubusercontent.com/anjia0532/gcr.io_mirror/master/pull-k8s-image.sh && chmod +x pull-k8s-image.sh\n./pull-k8s-image.sh ${{ steps.get_image_issues.outputs.IMAGE_NAME }}\n```"
+                labels=['success']
+              }else{
+                const jobsResponse =  await github.actions.listJobsForWorkflowRun({
+                  owner: '${{ env.GH_USER }}',
+                  repo: '${{ env.REPO_NAME }}',
+                  run_id: ${{ github.run_id }}
+                })
+                console.log("jobs",jobsResponse['data'])
+                body+="\n\n 日志:\n\n"
+                for(let job of jobsResponse['data']['jobs']){
+                    body+="- ["+job.name+"]("+job.html_url+")"
+                }
+                labels=['failed']
+              }
+              let gcrImg = "${{ steps.pullIssuesPorter.outputs.IMAGE_NAME }}"
 
-            你好 @${{ github.event.issue.user.login }}，我们完全同意你的提议/反馈，欢迎PR。
-          
+              let colonIndex = gcrImg.indexOf(":")
+              if (colonIndex > 0) {
+                gcrImg = gcrImg.substr(0,colonIndex)
+              }
+              let names = gcrImg.split("/")
+              let registry = names[0]
+              names=names.splice(1,5)
+              if("k8s.gcr.io" == registry){
+                body+="\n\n\n k8s.gcr.io 镜像标签 Api(需梯子) <https://k8s.gcr.io/v2/"+names.join("/")+"/tags/list>\n\n k8s.gcr.io 镜像标签 UI(需梯子) <https://console.cloud.google.com/gcr/images/k8s-artifacts-prod/us/"+names.join("/")+">\n\n"
+              }else{
+                let uri=names[0]+"/global/"+names.slice(1,5).join("/")
+
+                if(names.length==1){
+                  uri="global/"+names[0]
+                }
+                body+="\n\n\n gcr.io 镜像标签 Api(需梯子) <https://gcr.io/v2/"+names.join("/")+"/tags/list>\n\n gcr.io 镜像标签 UI(需梯子) <https://console.cloud.google.com/gcr/images/"+uri+">\n\n"
+              }
+              const issuesComment = await github.issues.createComment({
+                  owner: '${{ env.GH_USER }}',
+                  repo: '${{ env.REPO_NAME }}',
+                  issue_number: ${{ steps.pullIssuesPorter.outputs.ISSUE_NUMBER }},
+                  body: body
+              });
+              console.log("create issues comment resp:", issuesComment["status"] == 201 ? "success" : "failed" )
+              if(labels){
+                await github.issues.addLabels({
+                  owner: '${{ env.GH_USER }}',
+                  repo: '${{ env.REPO_NAME }}',
+                  issue_number: ${{ steps.pullIssuesPorter.outputs.ISSUE_NUMBER }},
+                  labels: labels
+              });
+              }
+            }
+

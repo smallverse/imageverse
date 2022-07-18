@@ -75,12 +75,13 @@ jobs:
 
             //
             const conditions = ["gcr.io", "k8s.gcr.io", "ghcr.io"];
-            let idx = image_name.indexOf('/');
+
             if (issue_number > 0) {
                 image_name = title.trim()
                 issues_body = ''
                 is_error = false
                 error_message = ''
+                let idx = image_name.indexOf('/');
                 if (image_name.includes("@")) {
                     // 不支持带摘要 k8s.gcr.io/xxx/xxx:v1.1.1@sha256:64dxxx
                     is_error = true

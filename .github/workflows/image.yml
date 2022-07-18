@@ -9,15 +9,15 @@ on:
   
 env:
   REPO_NAME: ${{ github.event.repository.name }}
-  GH_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+  GH_USER: smallverse
   
 jobs:
   reply-helper:
     runs-on: ubuntu-latest
     outputs:
-      IMAGE_NAME: ${{ steps.pullIssuesPorter.outputs.IMAGE_NAME }}
+      IMAGE_NAME: ${{ steps.get_image_issues.outputs.IMAGE_NAME }}
       SUCCESS: ${{ steps.successCheck.outputs.SUCCESS }}
-      REP_NAME: ${{ steps.pullIssuesPorter.outputs.REP_NAME }}
+      REP_NAME: ${{ steps.get_image_issues.outputs.REP_NAME }}
     steps:
       - name: check-issue
         id: check_issue_id
@@ -28,6 +28,7 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           title-includes: 'gcr.io,k8s.gcr.io,ghcr.io'
       - name: get image issues
+        if: steps.check_issue_id.outputs.check-result == 'true'
         id: get_image_issues
         uses: actions/github-script@v3.1.0
         with:
@@ -99,7 +100,7 @@ jobs:
                 } else {
 
                     if (image_name.length > idx + 1) {
-                        rep_name = image_name.substring(0, idx + 1) + image_name.substring(idx + 1).replace(/\//g,'_');
+                        rep_name = '${{ secrets.DOCKERHUB_USERNAME }}/' + image_name.replace(/\//g, '_');
                     }
                     issues_body = '构建进展 [https://github.com/${{ env.GH_USER }}/${{ env.REPO_NAME }}/actions/runs/${{ github.run_id }}](https://github.com/${{ env.GH_USER }}/${{ env.REPO_NAME }}/actions/runs/${{ github.run_id }})'
                 }
@@ -125,6 +126,14 @@ jobs:
             console.log('IMAGE_NAME', image_name)
             console.log('ISSUE_NUMBER', issue_number)
             console.log('REP_NAME', rep_name)
+      - name: pull from gcr.io and push to docker hub
+        if: steps.get_image_issues.outputs.REP_NAME != ''
+        shell: bash
+        run: |
+          docker pull ${{ steps.get_image_issues.outputs.IMAGE_NAME }}  
+          docker tag  ${{ steps.get_image_issues.outputs.IMAGE_NAME }}  ${{ steps.get_image_issues.outputs.REP_NAME }}      
+          docker ${{ steps.get_image_issues.outputs.REP_NAME }} 
+          echo "------ push image end"
       - name: image
         if: steps.check_issue_id.outputs.check-result == 'true'
         uses: actions-cool/issues-helper@v3

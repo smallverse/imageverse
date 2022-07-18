@@ -1,14 +1,8 @@
 name: Issue Reply
 
-# on: 
-#   issues:
-# #     types: [labeled,created,opened,edited]
-#     types: [labeled,opened,edited]
-#   workflow_dispatch:
-  
 on: 
   issues:
-    types: [opened]
+    types: [opened,labeled,edited]
   label:
     types: [created]
   workflow_dispatch:

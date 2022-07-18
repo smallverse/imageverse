@@ -1,5 +1,5 @@
 ---
-name: Image issue template
+name: ghcr.io/cross-rs/armv7-linux-androideabi:main
 about: Speed up the download of container images via DockerHub
 title: ''
 labels: image

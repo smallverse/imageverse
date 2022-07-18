@@ -13,7 +13,6 @@ jobs:
     steps:
       - name: check-issue
         id: check_issue_id
-        if: github.event.label.name == 'image' 
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'check-issue'

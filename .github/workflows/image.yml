@@ -6,7 +6,11 @@ on:
   label:
     types: [created]
   workflow_dispatch:
-
+  
+env:
+  REPO_NAME: ${{ github.event.repository.name }}
+  GH_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+  
 jobs:
   reply-helper:
     runs-on: ubuntu-latest

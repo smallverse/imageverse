@@ -38,7 +38,6 @@ jobs:
             let image_name
             let title
             let issues_author
-            let rep_name
 
             const ev = JSON.parse(
                 fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8')
@@ -109,8 +108,9 @@ jobs:
                 core.setFailed("No Images");
             }
 
+            let rep_name=''
             let idx = image_name.indexOf('/');
-            ep_name = image_name.substring(0, idx) + image_name.substring(idx).replace('/', '_');
+            rep_name = image_name.substring(0, idx) + image_name.substring(idx).replace('/', '_');
 
             core.setOutput('IMAGE_NAME', image_name)
             core.setOutput('ISSUE_NUMBER', issue_number)

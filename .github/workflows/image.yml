@@ -8,7 +8,7 @@ name: Issue Reply
 #   workflow_dispatch:
 on: 
   issues:
-    types: [opened]
+    types: [opened,edited]
   label:
     types: [created]
   workflow_dispatch:
